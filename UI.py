@@ -9,7 +9,7 @@ class Menu():
         pygame.init()
         
         self.clock = pygame.time.Clock()
-        self.FPS = 60
+        self.FPS = 300
         self.running = True
 
         # screen settings
@@ -37,11 +37,11 @@ class Menu():
         pygame.display.update()
         
         # scroll background
-        self.scroll += 0.5
+        self.scroll = 0
 
         # reset scroll
         if abs(self.scroll) > self.background_height:
-            self.scroll = 0
+            self.scroll += 0.5
     
     def main_menu(self):
         """main loop for menu"""
@@ -76,13 +76,17 @@ class Menu():
         
     def play(self):
         """play the game loop"""
+        all_sprites = pygame.sprite.Group()
+        all_sprites.add(self.vehicle)
+
         playing = True
         while playing:
+            self.SCREEN.fill((0, 0, 0))
             self.render()
             MOUSE_POS = pygame.mouse.get_pos()
-            self.vehicle.moveVehicle(MOUSE_POS)
+            self.vehicle.update(MOUSE_POS)
 
-            self.vehicle.draw(self.SCREEN)
+            all_sprites.draw(self.SCREEN)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -90,10 +94,8 @@ class Menu():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         playing = False 
-            pygame.display.update()
-            self.clock.tick(self.FPS)
-
-                
+            pygame.display.flip()
+            self.clock.tick(self.FPS)   
 
     def get_font(self, size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("assets/font.ttf", size)
