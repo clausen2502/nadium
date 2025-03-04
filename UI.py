@@ -2,6 +2,7 @@ import pygame
 import math
 from classes.button import Button
 from classes.vehicle import Vehicle
+from classes.obstacle import Obstacle
 
 
 class Menu():
@@ -29,6 +30,9 @@ class Menu():
 
         # set a vehicle instance
         self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, "assets/bumblebee.png")
+
+        # set a obstacle instance
+        self.obstacle = Obstacle("assets/asteroid1.png")
 
     def render(self):
         """draw the menu background and scroll"""
@@ -75,17 +79,27 @@ class Menu():
         
     def play(self):
         """play the game loop"""
-        all_sprites = pygame.sprite.Group()
-        all_sprites.add(self.vehicle)
+        obstacles = pygame.sprite.Group()
+
+        # spawn multiple obstacles
+        for i in range (5):
+            obstacles.add(Obstacle("assets/asteroid1.png"))
 
         playing = True
         while playing:
             self.SCREEN.fill((0, 0, 0))
             self.render()
+            
             MOUSE_POS = pygame.mouse.get_pos()
             self.vehicle.update(MOUSE_POS)
+            
+            # draw vehicle
+            self.vehicle.draw(self.SCREEN)
 
-            all_sprites.draw(self.SCREEN)
+            # update and draw obstacles
+            obstacles.update()
+            obstacles.draw(self.SCREEN)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
