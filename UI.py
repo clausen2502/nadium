@@ -34,14 +34,13 @@ class Menu():
         """draw the menu background and scroll"""
         for i in range(self.tiles):
             self.SCREEN.blit(self.backgroundPhoto, (0, (i - 1) * self.SCREEN_HEIGHT + self.scroll))
-        pygame.display.update()
         
         # scroll background
-        self.scroll = 0
+        self.scroll += 0.5
 
         # reset scroll
         if abs(self.scroll) > self.background_height:
-            self.scroll += 0.5
+            self.scroll = 0
     
     def main_menu(self):
         """main loop for menu"""
