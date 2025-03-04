@@ -1,14 +1,15 @@
 import pygame
 import math
 from classes.button import Button
+from classes.vehicle import Vehicle
 
-clock = pygame.time.Clock()
-FPS = 60
 
 class Menu():
     def __init__(self):
         pygame.init()
         
+        self.clock = pygame.time.Clock()
+        self.FPS = 60
         self.running = True
 
         # screen settings
@@ -25,6 +26,9 @@ class Menu():
         # define game variables
         self.scroll = 0
         self.tiles = math.ceil(self.SCREEN_WIDTH / self.background_height) + 1
+
+        # set a vehicle instance
+        self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, "assets/bumblebee.png")
 
     def render(self):
         """draw the menu background and scroll"""
@@ -61,20 +65,35 @@ class Menu():
                 button.update(self.SCREEN)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
+                    self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                         self.play()
                     if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
-                        pygame.quit()
+                        self.running = False
             pygame.display.update()
-            clock.tick(FPS)
+            self.clock.tick(self.FPS)
         
     def play(self):
         """play the game loop"""
         playing = True
         while playing:
             self.render()
+            MOUSE_POS = pygame.mouse.get_pos()
+            self.vehicle.moveVehicle(MOUSE_POS)
+
+            self.vehicle.draw(self.SCREEN)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    playing = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        playing = False 
+            pygame.display.update()
+            self.clock.tick(self.FPS)
+
+                
 
     def get_font(self, size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("assets/font.ttf", size)
