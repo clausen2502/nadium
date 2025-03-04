@@ -1,8 +1,10 @@
 import pygame
 import math
+import random
 from classes.button import Button
 from classes.vehicle import Vehicle
 from classes.obstacle import Obstacle
+from gameLogic import GameLogic
 
 
 class Menu():
@@ -31,16 +33,13 @@ class Menu():
         # set a vehicle instance
         self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, "assets/bumblebee.png")
 
-        # set a obstacle instance
-        self.obstacle = Obstacle("assets/asteroid1.png")
-
     def render(self):
         """draw the menu background and scroll"""
         for i in range(self.tiles):
             self.SCREEN.blit(self.backgroundPhoto, (0, (i - 1) * self.SCREEN_HEIGHT + self.scroll))
         
         # scroll background
-        self.scroll += 0.5
+        self.scroll += 1
 
         # reset scroll
         if abs(self.scroll) > self.background_height:
@@ -79,26 +78,25 @@ class Menu():
         
     def play(self):
         """play the game loop"""
-        obstacles = pygame.sprite.Group()
-
         # spawn multiple obstacles
-        for i in range (5):
-            obstacles.add(Obstacle("assets/asteroid1.png"))
+        game_logic = GameLogic(self.vehicle, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        game_logic.spawn_obstacles(5)
 
         playing = True
         while playing:
             self.SCREEN.fill((0, 0, 0))
             self.render()
             
+            # update vehicle position
             MOUSE_POS = pygame.mouse.get_pos()
             self.vehicle.update(MOUSE_POS)
             
-            # draw vehicle
-            self.vehicle.draw(self.SCREEN)
+            # update game logic (obstacles and collisions)
+            game_logic.update(scroll_speed=1)
 
-            # update and draw obstacles
-            obstacles.update()
-            obstacles.draw(self.SCREEN)
+            # draw vehicle and obstacles
+            self.vehicle.draw(self.SCREEN)
+            game_logic.draw(self.SCREEN)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

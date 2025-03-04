@@ -1,0 +1,37 @@
+import random
+import pygame
+from classes.obstacle import Obstacle
+
+
+class GameLogic:
+    def __init__(self, vehicle, screen_width, screen_height):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.vehicle = vehicle
+        self.obstacles = pygame.sprite.Group()
+
+    def spawn_obstacles(self, num):
+        """creates an obstacle at a random x-position"""
+        for i in range(num):
+            x = random.randint(50, self.screen_width - 50)
+            y = -50  # Start off-screen
+            obstacle = Obstacle("assets/asteroid1.png", x, y)
+            self.obstacles.add(obstacle)
+
+    def check_collisions(self):
+        """check if any obstacle hits the vehicle"""
+        pass
+      #  if pygame.sprite.spritecollideany(self.vehicle, self.obstacles):
+          #  self.vehicle.takeDamage(10) 
+
+    def update(self, scroll_speed):
+        """update obstacles based on scroll speed"""
+        for obstacle in self.obstacles:
+            obstacle.rect.y += scroll_speed
+            # remove off screen obstacles
+            if obstacle.rect.top > self.screen_height:
+                self.obstacles.remove(obstacle)
+
+    def draw(self, screen):
+        """draw obstacles and vehicle"""
+        self.obstacles.draw(screen)
