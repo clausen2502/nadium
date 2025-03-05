@@ -116,9 +116,12 @@ class Menu():
                     playing = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        playing = False 
+                        playing = False
+                if self.vehicle.health == 0:
+                    playing = False
+                    self.vehicle.health = 100 # reset the vehicle health to 100
             pygame.display.flip()
-            self.clock.tick(self.FPS)   
+            self.clock.tick(self.FPS) 
 
     def get_font(self, size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("assets/font.ttf", size)
