@@ -80,13 +80,22 @@ class Menu():
         """play the game loop"""
         # spawn multiple obstacles
         game_logic = GameLogic(self.vehicle, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        game_logic.spawn_obstacles(5)
-
+        
+        spawn_timer = 0
+        spawn_delay = 60
+        
         playing = True
         while playing:
             self.SCREEN.fill((0, 0, 0))
             self.render()
             
+            # spawn timer logic
+            if spawn_timer >= spawn_delay:
+                game_logic.spawn_obstacles(1)
+                spawn_timer = 0
+            spawn_timer += 1
+            
+
             # update vehicle position
             MOUSE_POS = pygame.mouse.get_pos()
             self.vehicle.update(MOUSE_POS)

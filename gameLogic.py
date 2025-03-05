@@ -14,20 +14,20 @@ class GameLogic:
         """creates an obstacle at a random x-position"""
         for i in range(num):
             x = random.randint(50, self.screen_width - 50)
-            y = -50  # Start off-screen
+            y = -50  # start off-screen
             obstacle = Obstacle("assets/asteroid1.png", x, y)
             self.obstacles.add(obstacle)
 
     def check_collisions(self):
         """check if any obstacle hits the vehicle"""
-        pass
-      #  if pygame.sprite.spritecollideany(self.vehicle, self.obstacles):
-          #  self.vehicle.takeDamage(10) 
+        if pygame.sprite.spritecollideany(self.vehicle, self.obstacles):
+            self.vehicle.takeDamage(10) 
 
     def update(self, scroll_speed):
         """update obstacles based on scroll speed"""
         for obstacle in self.obstacles:
             obstacle.rect.y += scroll_speed
+            
             # remove off screen obstacles
             if obstacle.rect.top > self.screen_height:
                 self.obstacles.remove(obstacle)
