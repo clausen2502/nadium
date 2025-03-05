@@ -9,7 +9,10 @@ class GameLogic:
         self.screen_height = screen_height
         self.vehicle = vehicle
         self.obstacles = pygame.sprite.Group()
-
+        self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
+        print(f"✅ GameLogic received vehicle ID: {id(self.vehicle)}")
+        print(f"✅ GameLogic vehicle from group ID: {id(self.vehicle_group.sprite)}")
+    
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
         for i in range(num):
@@ -18,10 +21,14 @@ class GameLogic:
             obstacle = Obstacle("assets/asteroid1.png", x, y)
             self.obstacles.add(obstacle)
 
+
     def check_collisions(self):
         """check if any obstacle hits the vehicle"""
-        if pygame.sprite.spritecollideany(self.vehicle, self.obstacles):
-            self.vehicle.takeDamage(10) 
+        collided_obstacle = pygame.sprite.spritecollideany(self.vehicle, self.obstacles)
+        if collided_obstacle:
+            print("Collision detected!")
+            self.vehicle.take_damage(25)
+            self.obstacles.remove(collided_obstacle)
 
     def update(self, scroll_speed):
         """update obstacles based on scroll speed"""
@@ -31,6 +38,7 @@ class GameLogic:
             # remove off screen obstacles
             if obstacle.rect.top > self.screen_height:
                 self.obstacles.remove(obstacle)
+        self.check_collisions()
 
     def draw(self, screen):
         """draw obstacles and vehicle"""

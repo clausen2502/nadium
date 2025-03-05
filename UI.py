@@ -33,6 +33,9 @@ class Menu():
         # set a vehicle instance
         self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, "assets/bumblebee.png")
 
+        # add the vehicle to a sprite group
+        self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
+    
     def render(self):
         """draw the menu background and scroll"""
         for i in range(self.tiles):
@@ -77,8 +80,8 @@ class Menu():
             self.clock.tick(self.FPS)
         
     def play(self):
-        """play the game loop"""
-        # spawn multiple obstacles
+        """Play the game loop"""
+        print(f"✅ Inside play(), self.vehicle ID: {id(self.vehicle)}")
         game_logic = GameLogic(self.vehicle, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         
         spawn_timer = 0
