@@ -10,8 +10,8 @@ class GameLogic:
         self.vehicle = vehicle
         self.obstacles = pygame.sprite.Group()
         self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
-        print(f"✅ GameLogic received vehicle ID: {id(self.vehicle)}")
-        print(f"✅ GameLogic vehicle from group ID: {id(self.vehicle_group.sprite)}")
+        print(f"GameLogic received vehicle ID: {id(self.vehicle)}")
+        print(f"GameLogic vehicle from group ID: {id(self.vehicle_group.sprite)}")
     
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
@@ -25,20 +25,21 @@ class GameLogic:
     def check_collisions(self):
         """check if any obstacle hits the vehicle"""
         collided_obstacle = pygame.sprite.spritecollideany(self.vehicle, self.obstacles)
-        if collided_obstacle:
-            print("Collision detected!")
-            self.vehicle.take_damage(25)
-            self.obstacles.remove(collided_obstacle)
+        if collided_obstacle and not self.vehicle.invincible:
+                print("Collision detected!")
+                self.vehicle.take_damage(25)
+                self.obstacles.remove(collided_obstacle)
 
     def update(self, scroll_speed):
         """update obstacles based on scroll speed"""
         for obstacle in self.obstacles:
             obstacle.rect.y += scroll_speed
-            
+
             # remove off screen obstacles
             if obstacle.rect.top > self.screen_height:
                 self.obstacles.remove(obstacle)
         self.check_collisions()
+        self.vehicle.update_invincibility()
 
     def draw(self, screen):
         """draw obstacles and vehicle"""
