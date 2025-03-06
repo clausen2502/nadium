@@ -106,6 +106,9 @@ class Menu():
             # update game logic (obstacles and collisions)
             game_logic.update(scroll_speed=1)
 
+            # check for invisibility
+            self.vehicle.update_invincibility()
+
             # draw vehicle and obstacles
             self.vehicle.draw(self.SCREEN)
             game_logic.draw(self.SCREEN)

@@ -9,8 +9,8 @@ class Vehicle(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x, y))
         self.health = 100
         self.last_damage_time = 0
-        self.invincibility_duration = 1
-        self.flicker_interval = 0.3
+        self.invincibility_duration = 20
+        self.flicker_interval = 1
         self.invincible = False
 
     def draw(self, screen):
@@ -34,9 +34,6 @@ class Vehicle(pygame.sprite.Sprite):
             print(f"Took damage, new vehicle health: {self.health}")
             if self.health <= 0:
                 self.destroy()
-            else:
-                print("Invincible, no damage taken")
-                self.update_invincibility()
 
     def destroy(self):
         """destroy vehicle"""
@@ -47,13 +44,14 @@ class Vehicle(pygame.sprite.Sprite):
         if self.invincible == True:
             current_time = time.time()
         
-            if int(current_time * 10) % 2 == 0:
+            if (int(current_time - self.last_damage_time) // self.flicker_interval) % 2 == 0:
                 grayscale_image = pygame.transform.grayscale(self.original_image)
                 self.image = pygame.transform.scale(grayscale_image, (self.rect.size))
             else:
                 self.image = pygame.transform.scale(self.original_image, (self.rect.size))
-        
+
             if current_time - self.last_damage_time >= self.invincibility_duration:
                 self.invincible = False
+                self.image = pygame.transform.scale(self.original_image, self.rect.size)
                 print("Invincibility ended")
                 
