@@ -61,3 +61,11 @@ class Vehicle(pygame.sprite.Sprite):
         tint_surface.fill(tint_color)
         tinted_image.blit(tint_surface, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
         return tinted_image
+
+    def reset(self, mouse_position):
+        """resets the vehicle to its original state when restarting game"""
+        self.health = 100
+        self.invincible = False
+        self.image = self.image = pygame.transform.scale(self.original_image, self.rect.size)
+        self.last_damage_time = 0
+        self.rect.center = mouse_position

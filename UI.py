@@ -83,7 +83,8 @@ class Menu():
         """Play the game loop"""
         print(f"✅ Inside play(), self.vehicle ID: {id(self.vehicle)}")
         game_logic = GameLogic(self.vehicle, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
         spawn_timer = 0
         spawn_delay = 60
         
@@ -117,11 +118,13 @@ class Menu():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         playing = False
+                        self.vehicle.reset(MENU_MOUSE_POS)
                 if self.vehicle.health == 0:
                     playing = False
-                    self.vehicle.health = 100 # reset the vehicle health to 100
+                    self.vehicle.reset(MENU_MOUSE_POS)
             pygame.display.flip()
-            self.clock.tick(self.FPS) 
+            self.clock.tick(self.FPS)
+
 
     def get_font(self, size): # Returns Press-Start-2P in the desired size
         return pygame.font.Font("assets/font.ttf", size)
