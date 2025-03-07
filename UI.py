@@ -93,6 +93,8 @@ class Menu():
             self.SCREEN.fill((0, 0, 0))
             self.render()
             
+            # 
+
             # spawn timer logic
             if spawn_timer >= spawn_delay:
                 game_logic.spawn_obstacles(1)
@@ -103,7 +105,7 @@ class Menu():
             # update vehicle position
             MOUSE_POS = pygame.mouse.get_pos()
             self.vehicle.update(MOUSE_POS)
-            
+
             # update game logic (obstacles and collisions)
             game_logic.update(scroll_speed=1)
 

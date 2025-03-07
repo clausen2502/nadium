@@ -16,7 +16,7 @@ class GameLogic:
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
         for i in range(num):
-            x = random.randint(50, self.screen_width - 50)
+            x = random.randint(250, self.screen_width - 250)
             y = -50  # start off-screen
             obstacle = Obstacle("assets/asteroid1.png", x, y)
             self.obstacles.add(obstacle)
@@ -24,7 +24,7 @@ class GameLogic:
 
     def check_collisions(self):
         """check if any obstacle hits the vehicle"""
-        collided_obstacle = pygame.sprite.spritecollideany(self.vehicle, self.obstacles)
+        collided_obstacle = pygame.sprite.spritecollideany(self.vehicle, self.obstacles, pygame.sprite.collide_mask)
         if collided_obstacle and not self.vehicle.invincible:
                 print("Collision detected!")
                 self.vehicle.take_damage(25)
@@ -44,3 +44,5 @@ class GameLogic:
     def draw(self, screen):
         """draw obstacles and vehicle"""
         self.obstacles.draw(screen)
+
+    def 

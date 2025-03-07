@@ -22,7 +22,9 @@ class Vehicle(pygame.sprite.Sprite):
 
     def update(self, position):
         """move the vehicle to follow the mouse"""
+        position = self.limit_vehicle(position)
         self.rect.center = position
+        
 
     def take_damage(self, amount):
         """apply damage to vehicle"""
@@ -69,3 +71,15 @@ class Vehicle(pygame.sprite.Sprite):
         self.image = self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.last_damage_time = 0
         self.rect.center = mouse_position
+
+    def limit_vehicle(self, position):
+        """sets a x limit where the vehicle cant reach"""
+        min_x = 250
+        max_x = 1030
+        x, y = position
+        print(position)
+        if x <= min_x:
+            x = min_x
+        if x >= max_x:
+            x = max_x
+        return (x, y)
