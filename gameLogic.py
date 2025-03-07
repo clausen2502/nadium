@@ -1,6 +1,7 @@
 import random
 import pygame
 from classes.obstacle import Obstacle
+import time
 
 
 class GameLogic:
@@ -10,9 +11,8 @@ class GameLogic:
         self.vehicle = vehicle
         self.obstacles = pygame.sprite.Group()
         self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
-        print(f"GameLogic received vehicle ID: {id(self.vehicle)}")
-        print(f"GameLogic vehicle from group ID: {id(self.vehicle_group.sprite)}")
-    
+        self.game_start_time = time.time()
+
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
         for i in range(num):
@@ -42,7 +42,12 @@ class GameLogic:
         self.vehicle.update_invincibility()
 
     def draw(self, screen):
-        """draw obstacles and vehicle"""
+        """draw obstacles"""
         self.obstacles.draw(screen)
 
-    def 
+    def calculate_distance_travelled(self):
+        """Calculate the distance travelled"""
+        elapsed_time = int((time.time() - self.game_start_time) * 100)
+        return elapsed_time
+
+    

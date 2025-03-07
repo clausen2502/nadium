@@ -1,10 +1,9 @@
 import pygame
 import math
-import random
 from classes.button import Button
 from classes.vehicle import Vehicle
-from classes.obstacle import Obstacle
 from gameLogic import GameLogic
+from data import Data
 
 
 class Menu():
@@ -35,6 +34,9 @@ class Menu():
 
         # add the vehicle to a sprite group
         self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
+
+        # set a data instance
+        self.data = Data()
     
     def render(self):
         """draw the menu background and scroll"""
@@ -81,7 +83,6 @@ class Menu():
         
     def play(self):
         """Play the game loop"""
-        print(f"✅ Inside play(), self.vehicle ID: {id(self.vehicle)}")
         game_logic = GameLogic(self.vehicle, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -92,8 +93,6 @@ class Menu():
         while playing:
             self.SCREEN.fill((0, 0, 0))
             self.render()
-            
-            # 
 
             # spawn timer logic
             if spawn_timer >= spawn_delay:
@@ -112,6 +111,18 @@ class Menu():
             # draw vehicle and obstacles
             self.vehicle.draw(self.SCREEN)
             game_logic.draw(self.SCREEN)
+
+             # show distance travelled
+            DISTANCE_TRAVELLED_TEXT = self.get_font(15).render("DISTANCE TRAVELLED:", True, "#d7fcd4")
+            DISTANCE_RECT = DISTANCE_TRAVELLED_TEXT.get_rect(center=(640, 20))
+            self.SCREEN.blit(DISTANCE_TRAVELLED_TEXT, DISTANCE_RECT)
+            total_distance = str(game_logic.calculate_distance_travelled()) + "M"
+            TOTAL_DISTANCE_TEXT = self.get_font(15).render(total_distance, True, "#d7fcd4")
+            TOTAL_DISTANCE_RECT = TOTAL_DISTANCE_TEXT.get_rect(center=(640, 40))
+            self.SCREEN.blit(TOTAL_DISTANCE_TEXT, TOTAL_DISTANCE_RECT)
+
+            # check for new highscore
+            self.data.updateHighscore(total_distance)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

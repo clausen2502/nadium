@@ -77,7 +77,6 @@ class Vehicle(pygame.sprite.Sprite):
         min_x = 250
         max_x = 1030
         x, y = position
-        print(position)
         if x <= min_x:
             x = min_x
         if x >= max_x:
