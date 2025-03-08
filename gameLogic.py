@@ -12,12 +12,14 @@ class GameLogic:
         self.obstacles = pygame.sprite.Group()
         self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
         self.game_start_time = time.time()
+        self.spawn_timer_count = 0
+        self.scroll_speed = 1
 
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
         for i in range(num):
             x = random.randint(250, self.screen_width - 250)
-            y = -50  # start off-screen
+            y = -50
             obstacle = Obstacle("assets/asteroid1.png", x, y)
             self.obstacles.add(obstacle)
 
@@ -30,16 +32,19 @@ class GameLogic:
                 self.vehicle.take_damage(25)
                 self.obstacles.remove(collided_obstacle)
 
-    def update(self, scroll_speed):
+    def update(self):
         """update obstacles based on scroll speed"""
+        elapsed_time = int(time.time() - self.game_start_time)
+        self.spawn_timer() # run the spawn timer
         for obstacle in self.obstacles:
-            obstacle.rect.y += scroll_speed
+            obstacle.rect.y += self.scroll_speed
 
             # remove off screen obstacles
             if obstacle.rect.top > self.screen_height:
                 self.obstacles.remove(obstacle)
         self.check_collisions()
         self.vehicle.update_invincibility()
+
 
     def draw(self, screen):
         """draw obstacles"""
@@ -50,4 +55,10 @@ class GameLogic:
         elapsed_time = int((time.time() - self.game_start_time) * 100)
         return elapsed_time
 
-    
+    def spawn_timer(self):
+        """Spawn timer logic"""
+        spawn_delay = 60
+        if self.spawn_timer_count >= spawn_delay:
+            self.spawn_obstacles(1)
+            self.spawn_timer_count = 0
+        self.spawn_timer_count += 1 

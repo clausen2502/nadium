@@ -68,12 +68,12 @@ class Vehicle(pygame.sprite.Sprite):
         """resets the vehicle to its original state when restarting game"""
         self.health = 100
         self.invincible = False
-        self.image = self.image = pygame.transform.scale(self.original_image, self.rect.size)
+        self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.last_damage_time = 0
         self.rect.center = mouse_position
 
     def limit_vehicle(self, position):
-        """sets a x limit where the vehicle cant reach"""
+        """sets a x limit that the vehicle cant reach"""
         min_x = 250
         max_x = 1030
         x, y = position
@@ -82,3 +82,8 @@ class Vehicle(pygame.sprite.Sprite):
         if x >= max_x:
             x = max_x
         return (x, y)
+    
+    def show_vehicle(self, screen):
+        """show the current selected vehicle"""
+        VEHICLE_RECT = (585, 375)
+        screen.blit(self.image, VEHICLE_RECT)

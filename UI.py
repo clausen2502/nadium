@@ -57,6 +57,7 @@ class Menu():
 
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
+            # PLAY and QUIT buttons
             NADIUM_TEXT = self.get_font(100).render("NADIUM", True, "#b68f40")
             MENU_RECT = NADIUM_TEXT.get_rect(center=(640, 100))
 
@@ -66,6 +67,15 @@ class Menu():
                     text_input="QUIT", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
             
             self.SCREEN.blit(NADIUM_TEXT, MENU_RECT)
+
+            # show highscore
+            highscore = str(self.data.getHighscore()) 
+            HIGHSCORE_TEXT = self.get_font(30).render(f"HIGHSCORE: {highscore}", True, "#00FFFF")
+            HIGHSCORE_RECT = HIGHSCORE_TEXT.get_rect(center=(640, 650))
+            self.SCREEN.blit(HIGHSCORE_TEXT, HIGHSCORE_RECT)
+
+            # show current vehicle
+            self.vehicle.show_vehicle(self.SCREEN)
 
             for button in [PLAY_BUTTON, QUIT_BUTTON]:
                 button.changeColor(MENU_MOUSE_POS)
@@ -85,28 +95,18 @@ class Menu():
         """Play the game loop"""
         game_logic = GameLogic(self.vehicle, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-
-        spawn_timer = 0
-        spawn_delay = 60
         
         playing = True
         while playing:
             self.SCREEN.fill((0, 0, 0))
             self.render()
-
-            # spawn timer logic
-            if spawn_timer >= spawn_delay:
-                game_logic.spawn_obstacles(1)
-                spawn_timer = 0
-            spawn_timer += 1
             
-
             # update vehicle position
             MOUSE_POS = pygame.mouse.get_pos()
             self.vehicle.update(MOUSE_POS)
 
             # update game logic (obstacles and collisions)
-            game_logic.update(scroll_speed=1)
+            game_logic.update()
 
             # draw vehicle and obstacles
             self.vehicle.draw(self.SCREEN)
