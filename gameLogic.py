@@ -102,3 +102,7 @@ class GameLogic:
             self.spawn_nadium(1)
             self.nadium_spawn_timer_count = 0
         self.nadium_spawn_timer_count += 1
+    
+    def validate_spawn(self, nadium_x, obstacle_x):
+        """validate spawn between Nadium and Obstacle"""
+        pass
