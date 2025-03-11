@@ -4,6 +4,7 @@ from classes.button import Button
 from classes.vehicle import Vehicle
 from gameLogic import GameLogic
 from data import Data
+from audioManager import AudioManager
 
 
 class Menu():
@@ -37,6 +38,9 @@ class Menu():
 
         # set a data instance
         self.data = Data()
+
+        # set the audio manager
+        self.audio = AudioManager()
     
     def render(self):
         """draw the menu background and scroll"""
@@ -100,6 +104,9 @@ class Menu():
         while playing:
             self.SCREEN.fill((0, 0, 0))
             self.render()
+            
+            # play the music
+            self.audio.play_music()
             
             # update vehicle position
             MOUSE_POS = pygame.mouse.get_pos()
