@@ -30,9 +30,9 @@ class Data:
                 data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             data = {}    
-        print(f"New highscore: {new_highscore}")
         current_highscore = data.get("highscore", 0)
         if int(new_highscore) > int(current_highscore): 
+            print(f"New highscore: {new_highscore}")
             data["highscore"] = int(new_highscore)
             with open(self.filename, 'w', encoding='utf-8') as file:
                     json.dump(data, file, indent=1, ensure_ascii=False)
@@ -45,7 +45,7 @@ class Data:
                     data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
                 data = {}    
-        print(f"New nadium balance: {nadium_balance}")
+        print(f"Nadium collected! New nadium balance: {nadium_balance}")
         data["nadium_balance"] = nadium_balance
         with open(self.filename, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=1, ensure_ascii=False)

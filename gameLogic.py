@@ -31,12 +31,13 @@ class GameLogic:
             self.obstacles.add(obstacle)
 
     def spawn_nadium(self, num):
-        """Creates nadium at a random x-position"""
+        """creates nadium at a random x-position"""
         for i in range(num):
             x = random.randint(250, self.screen_width - 250)
             y = -50
             nadium = Nadium("assets/nadium.png", x, y)
             self.nadium.add(nadium)
+
 
     def check_obstacle_collisions(self):
         """check if any obstacle hits the vehicle"""
@@ -75,7 +76,6 @@ class GameLogic:
         self.check_obstacle_collisions()
         self.check_nadium_collisions()
         self.vehicle.update_invincibility()
-
 
     def draw(self, screen):
         """draw obstacles"""
