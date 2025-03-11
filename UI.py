@@ -107,7 +107,7 @@ class Menu():
             
             # play the music
             self.audio.play_music()
-            
+
             # update vehicle position
             MOUSE_POS = pygame.mouse.get_pos()
             self.vehicle.update(MOUSE_POS)
@@ -139,9 +139,11 @@ class Menu():
                     if event.key == pygame.K_ESCAPE:
                         playing = False
                         self.vehicle.reset(MENU_MOUSE_POS)
-                if self.vehicle.health == 0:
-                    playing = False
-                    self.vehicle.reset(MENU_MOUSE_POS)
+                        self.audio.stop_music()
+            if self.vehicle.health == 0:
+                playing = False
+                self.vehicle.reset(MENU_MOUSE_POS)
+                self.audio.stop_music()
             pygame.display.flip()
             self.clock.tick(self.FPS)
 
