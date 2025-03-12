@@ -1,5 +1,4 @@
 import pygame
-import math
 from classes.button import Button
 from classes.vehicle import Vehicle
 from gameLogic import GameLogic
@@ -21,15 +20,11 @@ class Menu():
         self.SCREEN = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("NADIUM")
 
-        # load background photo
+         # load background photo
         self.backgroundPhoto = pygame.image.load("assets/temp_background.png")
         self.backgroundPhoto = pygame.transform.scale(self.backgroundPhoto, (self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.background_height = self.backgroundPhoto.get_height()
-
-        # define game variables
-        self.scroll = 0
-        self.tiles = math.ceil(self.SCREEN_WIDTH / self.background_height) + 1
-
+        
         # set a vehicle instance
         self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, "assets/bumblebee.png")
 
@@ -41,18 +36,6 @@ class Menu():
 
         # set the audio manager
         self.audio = AudioManager()
-    
-    def render(self):
-        """draw the menu background and scroll"""
-        for i in range(self.tiles):
-            self.SCREEN.blit(self.backgroundPhoto, (0, (i - 1) * self.SCREEN_HEIGHT + self.scroll))
-        
-        # scroll background
-        self.scroll += 1
-
-        # reset scroll
-        if abs(self.scroll) > self.background_height:
-            self.scroll = 0
     
     def main_menu(self):
         """main loop for menu"""
@@ -103,7 +86,7 @@ class Menu():
         playing = True
         while playing:
             self.SCREEN.fill((0, 0, 0))
-            self.render()
+            game_logic.render()
             
             # play the music
             self.audio.play_music()

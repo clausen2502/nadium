@@ -4,7 +4,7 @@ from classes.obstacle import Obstacle
 from classes.nadium import Nadium
 from data import Data
 import time
-
+import math
 
 
 class GameLogic:
@@ -20,7 +20,21 @@ class GameLogic:
         self.nadium_spawn_timer_count = 0
         self.scroll_speed = 1
         self.data = Data()
-        
+
+        # screen settings
+        self.SCREEN_WIDTH = 1280
+        self.SCREEN_HEIGHT = 720
+        self.SCREEN = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        pygame.display.set_caption("NADIUM")
+
+        # load background photo
+        self.backgroundPhoto = pygame.image.load("assets/temp_background.png")
+        self.backgroundPhoto = pygame.transform.scale(self.backgroundPhoto, (self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.background_height = self.backgroundPhoto.get_height()
+
+        # define game variables
+        self.scroll = 0
+        self.tiles = math.ceil(self.SCREEN_WIDTH / self.background_height) + 1
 
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
@@ -81,6 +95,18 @@ class GameLogic:
         """draw obstacles"""
         self.obstacles.draw(screen)
         self.nadium.draw(screen)
+
+    def render(self):
+        """draw the menu background and scroll"""
+        for i in range(self.tiles):
+            self.SCREEN.blit(self.backgroundPhoto, (0, (i - 1) * self.SCREEN_HEIGHT + self.scroll))
+        
+        # scroll background
+        self.scroll += self.scroll_speed
+
+        # reset scroll
+        if abs(self.scroll) > self.background_height:
+            self.scroll = 0
 
     def calculate_distance_travelled(self):
         """calculate the distance travelled"""
