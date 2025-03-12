@@ -11,7 +11,7 @@ class Menu():
         pygame.init()
         
         self.clock = pygame.time.Clock()
-        self.FPS = 300
+        self.FPS = 1000
         self.running = True
 
         # screen settings

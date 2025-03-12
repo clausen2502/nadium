@@ -6,6 +6,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.original_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(self.original_image, (100, 50))
         self.rect = self.image.get_rect(center=(x, y))
+        self.pos_y = float(self.rect.y) # testing
 
     def draw(self, screen):
         """draw the vehicle"""
