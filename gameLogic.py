@@ -3,39 +3,48 @@ import pygame
 from classes.obstacle import Obstacle
 from classes.nadium import Nadium
 from data import Data
+from audioManager import AudioManager
+from classes.vehicle import Vehicle
 import time
 import math
 
 
 class GameLogic:
-    def __init__(self, vehicle, screen_width, screen_height):
+    def __init__(self, screen, screen_width, screen_height):
+        self.SCREEN = screen
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.vehicle = vehicle
+        self.vehicle = Vehicle(self.screen_width // 2, self.screen_height // 2, "assets/bumblebee.png")
         self.obstacles = pygame.sprite.Group()
         self.nadium = pygame.sprite.Group()
         self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
         self.game_start_time = time.time()
+        
+        self.clock = pygame.time.Clock()
+        self.FPS = 1000
+
+        # obstacle and nadium spawn timers
         self.obstacle_spawn_timer_count = 0
         self.nadium_spawn_timer_count = 0
+       
+       # scroll speed
         self.scroll_speed = 1.0
         self.previous_speed = 1.0
+       
+        # set the data instance
         self.data = Data()
-
-        # screen settings
-        self.SCREEN_WIDTH = 1280
-        self.SCREEN_HEIGHT = 720
-        self.SCREEN = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-        pygame.display.set_caption("NADIUM")
 
         # load background photo
         self.backgroundPhoto = pygame.image.load("assets/temp_background.png")
-        self.backgroundPhoto = pygame.transform.scale(self.backgroundPhoto, (self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.backgroundPhoto = pygame.transform.scale(self.backgroundPhoto, (self.screen_width, self.screen_height))
         self.background_height = self.backgroundPhoto.get_height()
 
         # define game variables
         self.scroll = 0.0
-        self.tiles = math.ceil(self.SCREEN_WIDTH / self.background_height) + 1
+        self.tiles = math.ceil(self.screen_width / self.background_height) + 1
+
+        # set the audio manager
+        self.audio = AudioManager()
 
     def spawn_obstacles(self, num):
         """creates an obstacle at a random x-position"""
@@ -124,7 +133,7 @@ class GameLogic:
     def render(self):
         """draw the menu background and scroll"""
         for i in range(self.tiles):
-            self.SCREEN.blit(self.backgroundPhoto, (0, (i - 1) * self.SCREEN_HEIGHT + int(self.scroll)))
+            self.SCREEN.blit(self.backgroundPhoto, (0, (i - 1) * self.screen_height + int(self.scroll)))
         
         # scroll background
         self.scroll += self.scroll_speed
@@ -156,6 +165,56 @@ class GameLogic:
             self.nadium_spawn_timer_count = 0
         self.nadium_spawn_timer_count += 1
     
-    def validate_spawn(self, nadium_x, obstacle_x):
-        """validate spawn between Nadium and Obstacle"""
-        pass
+     
+    def play(self):
+        """Play the game loop"""
+        MOUSE_POS = pygame.mouse.get_pos()
+        
+        playing = True
+        while playing:
+            self.SCREEN.fill((0, 0, 0))
+            self.render()
+            
+            # play the music
+            self.audio.play_music()
+
+            # update vehicle position
+            MOUSE_POS = pygame.mouse.get_pos()
+            self.vehicle.update(MOUSE_POS)
+
+            # update game logic (obstacles and collisions)
+            self.update()
+
+            # draw vehicle and obstacles
+            self.vehicle.draw(self.SCREEN)
+            self.draw(self.SCREEN)
+
+             # show distance travelled
+            DISTANCE_TRAVELLED_TEXT = self.get_font(15).render("DISTANCE TRAVELLED:", True, "#d7fcd4")
+            DISTANCE_RECT = DISTANCE_TRAVELLED_TEXT.get_rect(center=(640, 20))
+            self.SCREEN.blit(DISTANCE_TRAVELLED_TEXT, DISTANCE_RECT)
+            total_distance = str(self.calculate_distance_travelled()) + "M"
+            TOTAL_DISTANCE_TEXT = self.get_font(15).render(total_distance, True, "#d7fcd4")
+            TOTAL_DISTANCE_RECT = TOTAL_DISTANCE_TEXT.get_rect(center=(640, 40))
+            self.SCREEN.blit(TOTAL_DISTANCE_TEXT, TOTAL_DISTANCE_RECT)
+
+            # check for new highscore
+            self.data.updateHighscore(total_distance)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    playing = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        playing = False
+                        self.vehicle.reset(MOUSE_POS)
+                        self.audio.stop_music()
+            if self.vehicle.health == 0:
+                playing = False
+                self.vehicle.reset(MOUSE_POS)
+                self.audio.stop_music()
+            pygame.display.flip()
+            self.clock.tick(self.FPS)
+
+    def get_font(self, size): # Returns Press-Start-2P in the desired size
+        return pygame.font.Font("assets/font.ttf", size)
