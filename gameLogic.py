@@ -18,7 +18,8 @@ class GameLogic:
         self.game_start_time = time.time()
         self.obstacle_spawn_timer_count = 0
         self.nadium_spawn_timer_count = 0
-        self.scroll_speed = 1
+        self.scroll_speed = 1.0
+        self.previous_speed = 1.0
         self.data = Data()
 
         # screen settings
@@ -46,14 +47,24 @@ class GameLogic:
             self.obstacles.add(obstacle)
 
     def spawn_nadium(self, num):
-        """creates nadium at a random x-position"""
+        """creates nadium at a random x-position, and make sure it does 
+        not overlap obstacle"""
         for i in range(num):
-            x = random.randint(250, self.screen_width - 250)
-            y = -50
-            nadium = Nadium("assets/nadium.png", x, y)
-            nadium.pos_y = float(nadium.rect.y)
-            self.nadium.add(nadium)
-
+            placed = False
+            tries = 0
+            while not placed and tries < 10:
+                x = random.randint(250, self.screen_width - 250)
+                y = -50
+                nadium = Nadium("assets/nadium.png", x, y)
+                test_rect = nadium.rect.inflate(40, 40) # inflate the rect so nadium "appears" bigger, so it does not overlap obstacle
+                
+                collision = False
+                for obstacle in self.obstacles:
+                        if test_rect.colliderect(obstacle.rect):
+                            collision = True
+                if not collision:
+                    self.nadium.add(nadium)
+                    placed = True
 
     def check_obstacle_collisions(self):
         """check if any obstacle hits the vehicle"""
@@ -75,14 +86,14 @@ class GameLogic:
         elapsed_time = int(time.time() - self.game_start_time)
         # max speed reaches after 3 min 33 seconds
         self.scroll_speed = min(4.0, 1 + (elapsed_time // 10) * 0.15) # gradually increase every 10 seconds 
-        previous_speed = round(self.scroll_speed)  # store the current speed
 
         # calculate new speed
         self.scroll_speed = min(10, 1 + (elapsed_time // 5) * 0.2)
 
         # only print if it actually changed
-        if round(self.scroll_speed) != previous_speed:
-            print(f"Scroll speed increased to: {self.scroll_speed}")
+        if self.scroll_speed != self.previous_speed:
+            print(f"Scroll speed increased to: {self.scroll_speed:.1f}")
+            self.previous_speed = self.scroll_speed
 
         self.obstacle_spawn_timer() # run the obstacle spawn timer
         for obstacle in self.obstacles:
