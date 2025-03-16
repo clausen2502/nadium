@@ -56,8 +56,8 @@ class GameLogic:
             self.obstacles.add(obstacle)
 
     def spawn_nadium(self, num):
-        """creates nadium at a random x-position, and make sure it does 
-        not overlap obstacle"""
+        """creates nadium at a random x-position, and makes sure it does 
+        not overlap any obstacle"""
         for i in range(num):
             placed = False
             tries = 0
@@ -65,15 +65,19 @@ class GameLogic:
                 x = random.randint(250, self.screen_width - 250)
                 y = -50
                 nadium = Nadium("assets/nadium.png", x, y)
-                test_rect = nadium.rect.inflate(40, 40) # inflate the rect so nadium "appears" bigger, so it does not overlap obstacle
+                test_rect = nadium.rect.inflate(150, 150) # inflate the rect so nadium "appears" bigger, so it does not overlap obstacle
                 
                 collision = False
                 for obstacle in self.obstacles:
                         if test_rect.colliderect(obstacle.rect):
                             collision = True
+                            break
+                tries += 1
                 if not collision:
                     self.nadium.add(nadium)
                     placed = True
+                if not placed:
+                    print("Couldn't find nadium spawn")
 
     def check_obstacle_collisions(self):
         """check if any obstacle hits the vehicle"""
@@ -164,7 +168,7 @@ class GameLogic:
             self.spawn_nadium(1)
             self.nadium_spawn_timer_count = 0
         self.nadium_spawn_timer_count += 1
-    
+
      
     def play(self):
         """Play the game loop"""

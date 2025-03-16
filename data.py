@@ -54,7 +54,6 @@ class Data:
                 data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
             data = {}    
-        print(f"last score: {last_score}")
         data["last_score"] = int(last_score)
         with open(self.filename, 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=1, ensure_ascii=False)
