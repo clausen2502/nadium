@@ -201,6 +201,9 @@ class GameLogic:
             # check for new highscore
             self.data.updateHighscore(total_distance)
 
+            # check last score
+            self.data.updateLastScore(total_distance)
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     playing = False

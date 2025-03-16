@@ -1,6 +1,6 @@
 import pygame
 
-class StoreUI():
+class InventoryUI():
     def __init__(self, screen, screen_width, screen_height):
         pygame.init
         self.screen = screen
@@ -10,7 +10,7 @@ class StoreUI():
         self.font = pygame.font.Font("assets/font.ttf", 30)
         self.title_pos = (self.screen_width // 2, 100)
 
-    def showStore():
+    def showInventory():
         pass
 
     def get_font(self, size):
