@@ -1,0 +1,15 @@
+{
+ "highscore": 10095,
+ "nadium_balance": 810,
+ "last_score": 1042,
+ "vehicles_owned" : { 
+     "bumblebee": {
+        "name": "bumblebee",
+        "image": "assets/bumblebee.png"
+     },
+     "johanna": { 
+        "name": "johanna",
+        "image": "assets/johanna_car.png"
+        }
+    }
+}

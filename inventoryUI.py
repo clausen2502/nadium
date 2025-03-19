@@ -29,17 +29,39 @@ class InventoryUI():
             pygame.display.update()
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        # title and buttons
+            # iterate over all vehicles owned in data, show them in order, be able to 
+            # select from different ones that are owned. Can't select one that is not owned.
+            vehicle_data = self.data.getAllVehicles()
+        
+            # find all names in vehicles owned
+            vehicles = []
+            for vehicle in vehicle_data:
+                vehicles.append(vehicle["name"])
+            
+            for vehicle in vehicles:
+                    vehicle_text = self.get_font(50).render(vehicle["name"])
 
-        # main loop
+
+            # title and buttons
+            NADIUM_TEXT = self.get_font(100).render("NADIUM", True, "#b68f40")
+            MENU_RECT = NADIUM_TEXT.get_rect(center=(640, 100))
+            store_rect = pygame.image.load("assets/play_rect.png")
+            store_rect = pygame.transform.scale(store_rect, (180, 60))
+            inventory_rect = pygame.image.load("assets/inventory_rect.png")
+            inventory_rect = pygame.transform.scale(inventory_rect, (180, 60))
+
+            # main loop
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.viewingInventory = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.viewingInventory = False
-            pygame.display.update()
-            self.clock.tick(self.FPS)
+                pygame.display.update()
+                self.clock.tick(self.FPS)
+
+    def increment_rect(self):
+        pass
 
     def get_font(self, size):
         return pygame.font.Font("assets/font.ttf", size)

@@ -1,9 +1,10 @@
- {
+{
     "bumblebee": {
         "name": "bumblebee",
         "image": "assets/bumblebee.png"
     },
-    "name": "johanna_car",
-    "image": "assets/johanna_car.png"
-    
+    "johanna": { 
+        "name": "johanna",
+        "image": "assets/johanna_car.png"
+    }
 }
