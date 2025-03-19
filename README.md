@@ -1,1 +1,2 @@
-An easy to play game!
+Enter a world where dimensions collide and only one thing matters, Nadium.
+Dodge deadly obstacles, swipe your way through shifting galaxies, and collect the universe's rarest energy source in this fast-paced, addictively fun space adventure!

@@ -46,9 +46,9 @@ class Menu():
             NADIUM_TEXT = self.get_font(100).render("NADIUM", True, "#b68f40")
             MENU_RECT = NADIUM_TEXT.get_rect(center=(640, 100))
             store_rect = pygame.image.load("assets/play_rect.png")
-            store_rect = pygame.transform.scale(store_rect, (140, 50))
+            store_rect = pygame.transform.scale(store_rect, (180, 60))
             inventory_rect = pygame.image.load("assets/inventory_rect.png")
-            inventory_rect = pygame.transform.scale(inventory_rect, (140, 50))
+            inventory_rect = pygame.transform.scale(inventory_rect, (180, 60))
 
             PLAY_BUTTON = Button(image=pygame.image.load("assets/play_rect.png"), pos=(640, 250), 
                                  text_input="PLAY", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
@@ -56,8 +56,8 @@ class Menu():
                                  text_input="QUIT", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
             STORE_BUTTON = Button(image=store_rect, pos=(900, 350), 
                                  text_input="STORE", font=self.get_font(20), base_color="#d7fcd4", hovering_color="White")
-            INVENTORY_BUTTON = Button(image=inventory_rect, pos=(900, 350), 
-                                 text_input="STORE", font=self.get_font(20), base_color="#d7fcd4", hovering_color="White")
+            INVENTORY_BUTTON = Button(image=inventory_rect, pos=(900, 440), 
+                                 text_input="INVENTORY", font=self.get_font(20), base_color="#d7fcd4", hovering_color="White")
             
             
             self.SCREEN.blit(NADIUM_TEXT, MENU_RECT)
@@ -74,7 +74,7 @@ class Menu():
             LAST_SCORE_RECT = LAST_SCORE_TEXT.get_rect(center=(623.5, 700))
             self.SCREEN.blit(LAST_SCORE_TEXT, LAST_SCORE_RECT)
 
-            for button in [PLAY_BUTTON, QUIT_BUTTON, STORE_BUTTON]:
+            for button in [PLAY_BUTTON, QUIT_BUTTON, STORE_BUTTON, INVENTORY_BUTTON]:
                 button.changeColor(MENU_MOUSE_POS)
                 button.update(self.SCREEN)
 
