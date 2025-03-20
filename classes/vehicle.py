@@ -82,11 +82,11 @@ class Vehicle(pygame.sprite.Sprite):
         if x >= max_x:
             x = max_x
         return (x, y)
-    
+
     def show_vehicle(self, screen):
         """show the current selected vehicle"""
         VEHICLE_RECT = (585, 375)
         screen.blit(self.image, VEHICLE_RECT)
     
     def __repr__(self):
-        return f"Vehicle(name='{self.name}', image='{self.image}'
+        return f"Vehicle(name='{self.name}', image='{self.image}'"

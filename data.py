@@ -1,4 +1,5 @@
 import json
+from classes.vehicledata import VehicleData
 from classes.vehicle import Vehicle
 
 class Data:
@@ -11,7 +12,14 @@ class Data:
         try:
             with open(self.vehicledata_file, "r", encoding="utf-8") as file:
                 data = json.load(file)
-                return list(data.values())
+
+                vehicles = []
+                for vehicle in data.values():
+                    vehicle_obj = VehicleData(
+                        name = vehicle["name"],
+                        image = vehicle["image"])
+                    vehicle.append(vehicle_obj)
+                return vehicles
         except(FileNotFoundError, json.JSONDecodeError):
             return []
             
@@ -20,7 +28,15 @@ class Data:
         try:
             with open(self.playerdata_file, "r", encoding="utf-8") as file:
                 data = json.load(file)
-                return list(data["vehicles_owned"].values())
+                owned_dict = data["vehicles_owned"]
+                
+                vehicles = []
+                for vehicle in owned_dict.values():
+                    vehicle_obj = VehicleData(
+                        name = vehicle["name"],
+                        image = vehicle["image"])
+                    vehicles.append(vehicle_obj)
+                return vehicles
         except(FileNotFoundError, json.JSONDecodeError):
             return []
 

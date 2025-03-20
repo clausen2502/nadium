@@ -1,5 +1,6 @@
 import pygame
 from data import Data
+from classes.button import Button
 
 class InventoryUI():
     def __init__(self, screen, screen_width, screen_height):
@@ -24,31 +25,36 @@ class InventoryUI():
 
     def showInventory(self):
         """Show the inventory layout and main loop functions"""
+        # create a "select" and "currently selected" button, which can be clicked to switch vehicles.
+        # make a button that changes color on hover
+        CURRENTLY_SELECTED_BUTTON = Button(image=pygame.image.load("assets/play_rect.png"), pos=(x_pos, y_pos), 
+                            text_input="SELECT", font=self.get_font(75), base_color="#32CD32", hovering_color="White")
+        SELECT_BUTTON = Button(image=pygame.image.load("assets/quit_rect.png"), pos=(x_pos, y_pos - 50), 
+                            text_input="QUIT", font=self.get_font(75), base_color="#FFD700", hovering_color="White")
+       
         while self.viewingInventory:
             self.screen.blit(self.inventoryBackground, (0, 0))
-            pygame.display.update()
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
             # iterate over all vehicles owned in data, show them in order, be able to 
             # select from different ones that are owned. Can't select one that is not owned.
-            vehicle_data = self.data.getAllVehicles()
-        
+            owned_vehicles = self.data.getAllOwnedVehicles()
+            x_pos = 250
+            y_pos = 250
             # find all names in vehicles owned
-            vehicles = []
-            for vehicle in vehicle_data:
-                vehicles.append(vehicle["name"])
-            
-            for vehicle in vehicles:
-                    vehicle_text = self.get_font(50).render(vehicle["name"])
+            for vehicle in owned_vehicles:
+                # load name from vehicle data and show it
+                vehicle_text = self.get_font(30).render(vehicle.name, True, "#b68f40")
+                vehicle_rect = vehicle_text.get_rect(center=(x_pos, y_pos))
+                
+                # load image from vehicle data and show it
+                vehicle_image = pygame.image.load(vehicle.image)
+                vehicle_image = pygame.transform.scale(vehicle_image, (100, 50))
+                vehicle_image_rect = vehicle_image.get_rect(center=(x_pos, y_pos - 50))
 
-
-            # title and buttons
-            NADIUM_TEXT = self.get_font(100).render("NADIUM", True, "#b68f40")
-            MENU_RECT = NADIUM_TEXT.get_rect(center=(640, 100))
-            store_rect = pygame.image.load("assets/play_rect.png")
-            store_rect = pygame.transform.scale(store_rect, (180, 60))
-            inventory_rect = pygame.image.load("assets/inventory_rect.png")
-            inventory_rect = pygame.transform.scale(inventory_rect, (180, 60))
+                self.screen.blit(vehicle_text, vehicle_rect)
+                self.screen.blit(vehicle_image, vehicle_image_rect)
+                
 
             # main loop
             for event in pygame.event.get():
@@ -57,11 +63,8 @@ class InventoryUI():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.viewingInventory = False
-                pygame.display.update()
-                self.clock.tick(self.FPS)
-
-    def increment_rect(self):
-        pass
+            pygame.display.update()
+            self.clock.tick(self.FPS)
 
     def get_font(self, size):
         return pygame.font.Font("assets/font.ttf", size)
