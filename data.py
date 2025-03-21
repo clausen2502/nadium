@@ -106,3 +106,23 @@ class Data:
         data["nadium_balance"] = nadium_balance
         with open(self.playerdata_file, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=1, ensure_ascii=False)
+
+    def getSelectedVehicleName(self) -> str:
+        """Gets the selected vehicle name from the json file"""
+        try:
+            with open(self.playerdata_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                return data.get("currently_selected", "")
+        except (FileNotFoundError, json.JSONDecodeError):
+            return ""
+        
+    def setSelectedVehicleName(self, vehicle_name) -> None:
+        """Updates the selected vehicle name"""
+        try:
+            with open(self.playerdata_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            data = {}    
+        data["currently_selected"] = vehicle_name
+        with open(self.playerdata_file, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=1, ensure_ascii=False)
