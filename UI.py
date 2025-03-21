@@ -7,7 +7,7 @@ from classes.vehicle import Vehicle
 from inventoryUI import InventoryUI
 
 class Menu():
-    def __init__(self):
+    def __init__(self, SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT, vehicle):
         pygame.init()
         
         self.clock = pygame.time.Clock()
@@ -15,10 +15,9 @@ class Menu():
         self.running = True
 
         # screen settings
-        self.SCREEN_WIDTH = 1280
-        self.SCREEN_HEIGHT = 720
+        self.SCREEN_WIDTH = SCREEN_WIDTH
+        self.SCREEN_HEIGHT = SCREEN_HEIGHT
         self.SCREEN = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-        pygame.display.set_caption("NADIUM")
 
         # load background photo
         self.backgroundPhoto = pygame.image.load("assets/temp_background.png")
@@ -29,7 +28,7 @@ class Menu():
         self.data = Data()
 
         # set a vehicle instance
-        self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, "assets/bumblebee.png")
+        self.vehicle = vehicle
 
     
     def main_menu(self):
@@ -88,6 +87,8 @@ class Menu():
                         self.store()
                     if INVENTORY_BUTTON.checkForInput(MENU_MOUSE_POS):
                         self.inventory()
+                        self.update_vehicle()
+
                     if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                         self.running = False
 
@@ -108,3 +109,12 @@ class Menu():
 
     def get_font(self, size):
         return pygame.font.Font("assets/font.ttf", size)
+    
+    def update_vehicle(self):
+        """Update the main menu vehicle image"""
+        selected_name = self.data.getSelectedVehicleName()
+        owned_vehicles = self.data.getAllOwnedVehicles()
+        vehicle_obj = next((v for v in owned_vehicles if v.name == selected_name), None)
+
+        if vehicle_obj:
+            self.vehicle = Vehicle(self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2, vehicle_obj.image)

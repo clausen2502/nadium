@@ -1,5 +1,6 @@
 import pygame
 
+
 class InventoryLogic:
     def __init__(self, data_manager):
         self.data = data_manager

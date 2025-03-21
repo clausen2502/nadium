@@ -13,11 +13,9 @@ class GameLogic:
     def __init__(self, screen, screen_width, screen_height):
         self.SCREEN = screen
         self.screen_width = screen_width
-        self.screen_height = screen_height
-        self.vehicle = Vehicle(self.screen_width // 2, self.screen_height // 2, "assets/bumblebee.png")
+        self.screen_height = screen_height       
         self.obstacles = pygame.sprite.Group()
         self.nadium = pygame.sprite.Group()
-        self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
         self.game_start_time = time.time()
         
         self.clock = pygame.time.Clock()
@@ -34,6 +32,15 @@ class GameLogic:
         # set the data instance
         self.data = Data()
 
+        # set the vehicle instance based on selected vehicle
+        selected_name = self.data.getSelectedVehicleName()
+        owned_vehicles = self.data.getAllOwnedVehicles()
+        vehicle_obj = next((v for v in owned_vehicles if v.name == selected_name), None)
+
+        if vehicle_obj:
+            self.vehicle = Vehicle(self.screen_width // 2, self.screen_height // 2, vehicle_obj.image)
+            self.vehicle_group = pygame.sprite.GroupSingle(self.vehicle)
+        
         # load background photo
         self.backgroundPhoto = pygame.image.load("assets/temp_background.png")
         self.backgroundPhoto = pygame.transform.scale(self.backgroundPhoto, (self.screen_width, self.screen_height))
