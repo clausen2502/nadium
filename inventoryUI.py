@@ -29,21 +29,47 @@ class InventoryUI():
         # set a inventory logic instance
         self.inventory = InventoryLogic(self.data)
 
+        # scroll settings
+        self.scroll_offset = 0
+        self.scroll_speed = 500
+
+        # load arrow photos
+        self.left_arrow = pygame.image.load("assets/left_arrow.png")
+        self.right_arrow = pygame.image.load("assets/right_arrow.png")
+
+        self.left_arrow = pygame.transform.scale(self.left_arrow, (50, 50))
+        self.right_arrow = pygame.transform.scale(self.right_arrow, (50, 50))
+
+        # Position arrows centered under vehicle selection
+        arrow_y = 400
+        arrow_spacing = 100
+        self.left_arrow_rect = self.left_arrow.get_rect(center=(self.screen_width // 2 - arrow_spacing, arrow_y))
+        self.right_arrow_rect = self.right_arrow.get_rect(center=(self.screen_width // 2 + arrow_spacing, arrow_y))
+
     def showInventory(self):
         """Show the inventory layout and main loop functions"""
         while self.viewingInventory:
             self.screen.blit(self.inventoryBackground, (0, 0))
             MENU_MOUSE_POS = pygame.mouse.get_pos()
-
+            
             x_pos = 250
             y_pos = 250
+            owned_vehicles = self.inventory.get_vehicles()
             for vehicle in self.inventory.get_vehicles():
+                # skip drawing image if it's way off screen for optimization
+                draw_x = x_pos - self.scroll_offset
+                if draw_x < -300 or draw_x > self.screen_width + 300:
+                    x_pos += self.scroll_speed
+                    continue
+                
+                # vehicle image
                 vehicle_image = self.inventory.get_vehicle_image(vehicle.name)
-                vehicle_image_rect = vehicle_image.get_rect(center=(x_pos, y_pos - 50))
+                vehicle_image_rect = vehicle_image.get_rect(center=(draw_x, y_pos - 50))
                 self.screen.blit(vehicle_image, vehicle_image_rect)
 
+
                 vehicle_text = self.get_font(30).render(vehicle.name, True, "#b68f40")
-                vehicle_text_rect = vehicle_text.get_rect(center=(x_pos, y_pos + 20))
+                vehicle_text_rect = vehicle_text.get_rect(center=(draw_x, y_pos + 20))
                 self.screen.blit(vehicle_text, vehicle_text_rect)
 
                 
@@ -59,7 +85,7 @@ class InventoryUI():
 
                 button = Button(
                     image=button_rect,
-                    pos=(x_pos, y_pos + 80),
+                    pos=(draw_x, y_pos + 80),
                     text_input=button_text,
                     font=self.get_font(25),
                     base_color=button_color,
@@ -73,13 +99,26 @@ class InventoryUI():
 
                 x_pos += 400
 
-            # main loop
+            # blit arrows
+            self.screen.blit(self.left_arrow, self.left_arrow_rect)
+            self.screen.blit(self.right_arrow, self.right_arrow_rect)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.viewingInventory = False
-                if event.type == pygame.KEYDOWN:
+                elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.viewingInventory = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Left click
+                        MENU_MOUSE_POS = pygame.mouse.get_pos()
+                        if self.left_arrow_rect.collidepoint(MENU_MOUSE_POS):
+                            self.scroll_offset = max(0, self.scroll_offset - self.scroll_speed)
+                        elif self.right_arrow_rect.collidepoint(MENU_MOUSE_POS):
+                            max_scroll = max(0, (len(owned_vehicles) * 300) - self.screen_width + 250)
+                            self.scroll_offset = min(max_scroll, self.scroll_offset + self.scroll_speed)
+
+
+            
             pygame.display.update()
             self.clock.tick(self.FPS)
 

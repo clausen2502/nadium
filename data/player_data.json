@@ -1,7 +1,7 @@
 {
  "highscore": 10095,
- "nadium_balance": 830,
- "last_score": 772,
+ "nadium_balance": 870,
+ "last_score": 450,
  "currently_selected": "bumblebee",
  "vehicles_owned": {
   "bumblebee": {
@@ -11,6 +11,14 @@
   "johanna": {
    "name": "johanna",
    "image": "assets/johanna.png"
+  },
+  "police": {
+   "name": "police",
+   "image": "assets/police.png"
+  },
+  "mr_white": {
+   "name": "mr_white",
+   "image": "assets/mr_white.png"
   }
  }
 }

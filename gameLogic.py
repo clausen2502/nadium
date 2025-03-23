@@ -69,7 +69,7 @@ class GameLogic:
             placed = False
             tries = 0
             while not placed and tries < 10:
-                x = random.randint(250, self.screen_width - 250)
+                x = random.randint(300, self.screen_width - 300)
                 y = -50
                 nadium = Nadium("assets/nadium.png", x, y)
                 test_rect = nadium.rect.inflate(150, 150) # inflate the rect so nadium "appears" bigger, so it does not overlap obstacle
