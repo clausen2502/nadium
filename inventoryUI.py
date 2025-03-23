@@ -3,7 +3,6 @@ from data import Data
 from classes.button import Button
 from inventoryLogic import InventoryLogic
 
-
 class InventoryUI():
     def __init__(self, screen, screen_width, screen_height):
         pygame.init
@@ -18,7 +17,6 @@ class InventoryUI():
         self.FPS = 1000
         self.viewingInventory = True
         
-
         # load background photo
         self.inventoryBackground = pygame.image.load("assets/inventory.png")
         self.inventoryBackground = pygame.transform.scale(self.inventoryBackground, (self.screen_width, self.screen_height))
@@ -32,19 +30,39 @@ class InventoryUI():
         # scroll settings
         self.scroll_offset = 0
         self.scroll_speed = 500
+        
+        # arrow settings
+        arrow_y = 680
+        arrow_spacing = 100
 
-        # load arrow photos
+        # load and scale base arrow images
         self.left_arrow = pygame.image.load("assets/left_arrow.png")
-        self.right_arrow = pygame.image.load("assets/right_arrow.png")
-
         self.left_arrow = pygame.transform.scale(self.left_arrow, (50, 50))
+        self.right_arrow = pygame.image.load("assets/right_arrow.png")
         self.right_arrow = pygame.transform.scale(self.right_arrow, (50, 50))
 
-        # Position arrows centered under vehicle selection
-        arrow_y = 400
-        arrow_spacing = 100
-        self.left_arrow_rect = self.left_arrow.get_rect(center=(self.screen_width // 2 - arrow_spacing, arrow_y))
-        self.right_arrow_rect = self.right_arrow.get_rect(center=(self.screen_width // 2 + arrow_spacing, arrow_y))
+        self.left_arrow_btn = Button(
+            image=self.left_arrow,
+            pos=(self.screen_width // 2 - arrow_spacing, arrow_y),
+            text_input="",
+            font=self.get_font(10),
+            base_color=(255, 255, 255),  # ignored 
+            hovering_color=(255, 255, 255))  # ignored 
+
+        self.right_arrow_btn = Button(
+            image=self.right_arrow,
+            pos=(self.screen_width // 2 + arrow_spacing, arrow_y),
+            text_input="",
+            font=self.get_font(10),
+            base_color=(255, 255, 255), # ignored 
+            hovering_color=(255, 255, 255)) # ignored 
+
+        # Load hover images
+        self.left_arrow_hover = pygame.image.load("assets/left_arrow_hover.png")
+        self.left_arrow_hover = pygame.transform.scale(self.left_arrow_hover, (50, 50))
+
+        self.right_arrow_hover = pygame.image.load("assets/right_arrow_hover.png")
+        self.right_arrow_hover = pygame.transform.scale(self.right_arrow_hover, (50, 50))
 
     def showInventory(self):
         """Show the inventory layout and main loop functions"""
@@ -67,12 +85,10 @@ class InventoryUI():
                 vehicle_image_rect = vehicle_image.get_rect(center=(draw_x, y_pos - 50))
                 self.screen.blit(vehicle_image, vehicle_image_rect)
 
-
                 vehicle_text = self.get_font(30).render(vehicle.name, True, "#b68f40")
                 vehicle_text_rect = vehicle_text.get_rect(center=(draw_x, y_pos + 20))
                 self.screen.blit(vehicle_text, vehicle_text_rect)
 
-                
                 is_selected = self.inventory.is_selected(vehicle.name)
                 button_rect = pygame.image.load("assets/play_rect.png")
                 if is_selected:
@@ -100,8 +116,21 @@ class InventoryUI():
                 x_pos += 400
 
             # blit arrows
-            self.screen.blit(self.left_arrow, self.left_arrow_rect)
-            self.screen.blit(self.right_arrow, self.right_arrow_rect)
+            # Hover effect for arrows
+            if self.left_arrow_btn.checkForInput(MENU_MOUSE_POS):
+                self.left_arrow_btn.image = self.left_arrow_hover
+            else:
+                self.left_arrow_btn.image = self.left_arrow
+
+            if self.right_arrow_btn.checkForInput(MENU_MOUSE_POS):
+                self.right_arrow_btn.image = self.right_arrow_hover
+            else:
+                self.right_arrow_btn.image = self.right_arrow
+
+            # draw buttons
+            self.left_arrow_btn.update(self.screen)
+            self.right_arrow_btn.update(self.screen)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.viewingInventory = False
@@ -109,16 +138,13 @@ class InventoryUI():
                     if event.key == pygame.K_ESCAPE:
                         self.viewingInventory = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:  # Left click
-                        MENU_MOUSE_POS = pygame.mouse.get_pos()
-                        if self.left_arrow_rect.collidepoint(MENU_MOUSE_POS):
+                    if event.button == 1:
+                        if self.left_arrow_btn.checkForInput(MENU_MOUSE_POS):
                             self.scroll_offset = max(0, self.scroll_offset - self.scroll_speed)
-                        elif self.right_arrow_rect.collidepoint(MENU_MOUSE_POS):
-                            max_scroll = max(0, (len(owned_vehicles) * 300) - self.screen_width + 250)
+                        elif self.right_arrow_btn.checkForInput(MENU_MOUSE_POS):
+                            max_scroll = max(0, (len(owned_vehicles) * 360) - self.screen_width + 250)
                             self.scroll_offset = min(max_scroll, self.scroll_offset + self.scroll_speed)
 
-
-            
             pygame.display.update()
             self.clock.tick(self.FPS)
 
