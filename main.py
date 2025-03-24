@@ -15,6 +15,5 @@ def main():
     ui = Menu(screen, screen_width, screen_height, game.vehicle)
 
     ui.main_menu()
-
 if __name__ == "__main__":
     main()

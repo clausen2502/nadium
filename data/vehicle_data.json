@@ -6,5 +6,17 @@
     "johanna": { 
         "name": "johanna",
         "image": "assets/johanna.png"
+    },
+    "police": {
+     "name": "police",
+     "image": "assets/police.png"
+    },
+    "mr_white": {
+     "name": "mr_white",
+     "image": "assets/mr_white.png"
+    },
+    "SUV": {
+     "name": "SUV",
+     "image": "assets/SUV.png"
     }
 }

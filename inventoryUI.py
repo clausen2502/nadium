@@ -29,7 +29,9 @@ class InventoryUI():
 
         # scroll settings
         self.scroll_offset = 0
-        self.scroll_speed = 500
+        self.vehicle_spacing = 400
+        self.scroll_speed = self.vehicle_spacing
+        self.vehicle_start_x = 250
         
         # arrow settings
         arrow_y = 680
@@ -70,10 +72,10 @@ class InventoryUI():
             self.screen.blit(self.inventoryBackground, (0, 0))
             MENU_MOUSE_POS = pygame.mouse.get_pos()
             
-            x_pos = 250
+            x_pos = self.vehicle_start_x
             y_pos = 250
             owned_vehicles = self.inventory.get_vehicles()
-            for vehicle in self.inventory.get_vehicles():
+            for vehicle in owned_vehicles:
                 # skip drawing image if it's way off screen for optimization
                 draw_x = x_pos - self.scroll_offset
                 if draw_x < -300 or draw_x > self.screen_width + 300:
@@ -113,7 +115,7 @@ class InventoryUI():
                 button.changeColor(MENU_MOUSE_POS)
                 button.update(self.screen)
 
-                x_pos += 400
+                x_pos += self.vehicle_spacing
 
             # blit arrows
             # Hover effect for arrows
@@ -142,7 +144,8 @@ class InventoryUI():
                         if self.left_arrow_btn.checkForInput(MENU_MOUSE_POS):
                             self.scroll_offset = max(0, self.scroll_offset - self.scroll_speed)
                         elif self.right_arrow_btn.checkForInput(MENU_MOUSE_POS):
-                            max_scroll = max(0, (len(owned_vehicles) * 360) - self.screen_width + 250)
+                            vehicles_visible = self.screen_width // self.vehicle_spacing
+                            max_scroll = max(0, (len(owned_vehicles) - vehicles_visible) * self.vehicle_spacing)
                             self.scroll_offset = min(max_scroll, self.scroll_offset + self.scroll_speed)
 
             pygame.display.update()

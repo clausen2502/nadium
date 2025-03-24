@@ -18,7 +18,7 @@ class Data:
                     vehicle_obj = VehicleData(
                         name = vehicle["name"],
                         image = vehicle["image"])
-                    vehicle.append(vehicle_obj)
+                    vehicles.append(vehicle_obj)
                 return vehicles
         except(FileNotFoundError, json.JSONDecodeError):
             return []
@@ -124,5 +124,20 @@ class Data:
         except (FileNotFoundError, json.JSONDecodeError):
             data = {}    
         data["currently_selected"] = vehicle_name
+        with open(self.playerdata_file, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=1, ensure_ascii=False)
+
+    def buyVehicle(self, vehicle_name: str, image_path: str) -> None:
+        """Adds a new vehicle to the owned list in player_data.json"""
+        try:
+            with open(self.playerdata_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            data = {"vehicles_owned": {}}
+        if "vehicles_owned" not in data:
+            data["vehicles_owned"] = {}
+        data["vehicles_owned"][vehicle_name] = {
+            "name": vehicle_name,
+            "image": image_path}
         with open(self.playerdata_file, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=1, ensure_ascii=False)

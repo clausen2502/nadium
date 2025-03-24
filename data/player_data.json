@@ -1,8 +1,8 @@
 {
  "highscore": 10095,
- "nadium_balance": 876,
- "last_score": 386,
- "currently_selected": "mr_white",
+ "nadium_balance": 896,
+ "last_score": 6488,
+ "currently_selected": "bumblebee",
  "vehicles_owned": {
   "bumblebee": {
    "name": "bumblebee",
@@ -19,6 +19,10 @@
   "mr_white": {
    "name": "mr_white",
    "image": "assets/mr_white.png"
+  },
+  "SUV": {
+   "name": "SUV",
+   "image": "assets/SUV.png"
   }
  }
 }
